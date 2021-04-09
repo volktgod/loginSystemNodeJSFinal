@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import session from "express-session";
 import connectFlash from "connect-flash";
 import passport from "passport";
+import dbCon from "./configs/DBConnection";
 
 let app = express();
 
@@ -22,6 +23,31 @@ app.use(session({
         maxAge: 1000 * 60 * 60 * 24 // 86400000 1 day
     }
 }));
+
+app.get("/profile/:id", (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+      return res
+        .status(400)
+        .send({ error: true, message: "Please provide account id" });
+    } else {
+      dbCon.query(
+        "SELECT * FROM account WHERE id = ?",
+        id,
+        (error, results, fields) => {
+          if (error) throw error;
+  
+          let message = "";
+          if (results === undefined || results.length == 0) {
+            message = "ID not found";
+          } else {
+            message = `Successfully retrieved profile ID = ${id}`;
+          }
+          return res.send({ error: false, data: results[0], message: message });
+        }
+      );
+    }
+  });
 
 // Enable body parser post data
 app.use(bodyParser.json());
@@ -40,5 +66,5 @@ app.use(passport.session());
 // init all web routes
 initWebRoutes(app);
 
-let port = process.env.PORT || 8080;
+let port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Building a login system with NodeJS is running on port ${port}!`));
