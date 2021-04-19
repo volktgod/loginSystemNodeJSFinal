@@ -1,5 +1,6 @@
+//GET OUR HOMEPAGE
 let handleHelloWorld = async (req, res) => {
-    return res.render("homepage.ejs",{
+    return res.send({ error: false, message: "Homepage"},{
         user: req.user
     });
 };

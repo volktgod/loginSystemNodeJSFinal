@@ -1,6 +1,7 @@
 import { validationResult } from "express-validator";
 import loginService from "../services/loginService";
 
+//GET OUR LOGIN PAGE
 let getPageLogin = (req, res) => {
     return res.render("login.ejs", {
         errors: req.flash("errors")
@@ -16,7 +17,8 @@ let handleLogin = async (req, res) => {
             errorsArr.push(item.msg);
         });
         req.flash("errors", errorsArr);
-        return res.redirect("/login");
+        // return res.redirect("/login");
+        return res.send({ error: false, message: "Login Successfully"});
     }
 
     try {
@@ -24,7 +26,8 @@ let handleLogin = async (req, res) => {
         return res.redirect("/");
     } catch (err) {
         req.flash("errors", err);
-        return res.redirect("/login");
+        // return res.redirect("/login");
+        return res.send({ error: false, message: "Login Failed"});
     }
 };
 

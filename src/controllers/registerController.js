@@ -1,10 +1,9 @@
 import registerService from "./../services/registerService";
 import { validationResult } from "express-validator";
 
+//GET OUT REGISTER PAGE
 let getPageRegister = (req, res) => {
-    return res.render("register.ejs", {
-        errors: req.flash("errors")
-    });
+    return res.send({ error: false, message: "Register Page"});
 };
 
 let createNewUser = async (req, res) => {
@@ -17,7 +16,8 @@ let createNewUser = async (req, res) => {
             errorsArr.push(item.msg);
         });
         req.flash("errors", errorsArr);
-        return res.redirect("/register");
+        // return res.redirect("/register");
+        return res.send({ error: false, message: "Register Page"});
     }
 
     //create a new user
@@ -28,10 +28,12 @@ let createNewUser = async (req, res) => {
     };
     try {
         await registerService.createNewUser(newUser);
-        return res.redirect("/login");
+        // return res.redirect("/login");
+        return res.send({ error: false, message: "Register Successfully"})
     } catch (err) {
         req.flash("errors", err);
-        return res.redirect("/register");
+        // return res.redirect("/register");
+        return res.send({ error: false, message: "Register Failed"})
     }
 };
 module.exports = {
